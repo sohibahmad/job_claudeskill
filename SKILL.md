@@ -1,19 +1,25 @@
 ---
 name: job-search-assistant
-description: Automated job search agent for Document Controller and Procurement roles in Saudi Arabia/GCC. Searches 50+ job portals, outputs tailored ATS resumes and cover letters, generates downloadable CSV reports, and tracks application status via Gmail.
+description: Automated job search agent for Document Controller and Procurement roles in Saudi Arabia/GCC. Searches 50+ job portals for postings listed in the past 24 hours, outputs tailored ATS resumes and cover letters, generates downloadable CSV reports, and tracks application status via Gmail.
 ---
 
 # Job Search Automation Protocol
 
 ## 1. Candidate Profile & Core Targets
 - *Candidate Name:* Sohib Ahmad
-- *Target Roles:* Document Controller, Procurement Manager, Procurement Support, Purchasing Executive
+- *Target Roles:* Document Controller, Procurement Manager, Procurement Support, Purchasing Executive, supply chain, inventory management
 - *Primary Locations:* Saudi Arabia (Jeddah, Riyadh, Dammam) & GCC Countries (UAE, Qatar, Kuwait, Oman, Bahrain)
 - *Status:* Transferable Iqama (Saudi Arabia) — Immediately Available
 
 ---
 
-## 2. Directory of Target Portals (50 Platforms)
+## 2. STRICT 24-HOUR LISTING FILTER (MANDATORY RULE)
+- *Filter Constraint:* Only process, score, or include job openings that were published or posted within the *last 24 hours* (or flagged as "Posted Today").
+- *Handling Older Posts:* If a job posting is older than 24 hours (e.g., posted 2+ days ago), skip it or output: Status: Skipped (Posted >24 hours ago).
+
+---
+
+## 3. Directory of Target Portals (50 Platforms)
 
 ### Regional & GCC General Portals
 - LinkedIn Jobs (https://www.linkedin.com/jobs/)
@@ -79,14 +85,14 @@ description: Automated job search agent for Document Controller and Procurement 
 
 ---
 
-## 3. Workflow Execution Steps
+## 4. Workflow Execution Steps
 
 Whenever a search is triggered or a job posting/URL is provided:
 
-### Step A: Match Analysis & Scoring
-1. Parse requirements (systems: Aconex, EDMS, SAP, Tally; duties: POs, transmittals, vendor management).
-2. Compare against master_resume.md.
-3. Calculate a *Match Score (0–100%)*.
+### Step A: 24-Hour & Match Verification
+1. Verify the job posting date. Reject if older than 24 hours.
+2. Parse job requirements (systems: Aconex, EDMS, SAP, Tally; duties: POs, transmittals, vendor management).
+3. Compare against master_resume.md and calculate a *Match Score (0–100%)*.
 
 ### Step B: ATS Resume & Cover Letter Generation
 1. *ATS-Optimized Resume:* Generate a clean, single-column Markdown resume tailored specifically to the target role's keywords.
@@ -98,7 +104,7 @@ Date Found | Job Title | Company Name | Location | Match Score | Job Direct URL 
 
 ---
 
-## 4. Application Status & Gmail Tracking
+## 5. Application Status & Gmail Tracking
 
 When integrated with Gmail or processing email updates:
 1. Automatically scan inbox for keywords: "Interview", "Application Received", "Regret", "Status", "Acknowledge".
@@ -111,26 +117,7 @@ When integrated with Gmail or processing email updates:
 
 ---
 
-## 5. Nightly Automated Search Routine
+## 6. Nightly Automated Search Routine
 - Execute automatically during off-peak hours (03:00 AM local time).
 - Scan primary GCC search aggregators (Google Jobs, Expatriates, Indeed KSA) for active openings posted in the last 24 hours.
-- Append all new matches, tailored resumes, and cover letters directly into the daily report CSV file
-
----
-## 6. Activation Triggers (When to Run This Skill)
-Activate this protocol immediately if the user's prompt includes any of the following intents:
-- "Find job openings" or "Search jobs in Saudi / GCC"
-- "Analyze this job description / URL"
-- "Tailor my resume for this role"
-- "Draft a cover letter / HR email"
-- "Check my email for job application updates"
-
----
-
-## 7. Mandatory Output Schemas
-
-### A. CSV / Excel Report Structure
-When generating tabular results, enforce this EXACT header and structure so it opens cleanly in Microsoft Excel:
-```csv
-"Date","Job Title","Company","Location","Match Score","Portal Name","URL","Status","Email Subject Line"
-"2026-09-02","Document Controller","Al-Bawani","Riyadh, KSA","88%","Expatriates","https://...","Applied","Application: Document Controller - Sohib Ahmad
+- Append all new 24-hour matches, tailored resumes, and cover letters directly into the daily report CSV file
